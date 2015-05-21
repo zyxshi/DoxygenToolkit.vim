@@ -581,6 +581,24 @@ function! <SID>DoxygenCommentFunc()
     let l:types = { "class": l:classPattern, "function": l:functionPattern }
   endif
 
+  mark d
+  let l:lineBuffer = getline(line("."))
+  if (match(l:lineBuffer, '^{') != -1)
+	  exec "normal k"
+	  let l:lineBuffer = getline(line("."))
+	  let l:count = 1
+	  while (match(l:lineBuffer, '^\s\+\S') != -1 && l:count < 11)
+		  exec "normal k"
+		  let l:lineBuffer = getline(line("."))
+		  let l:count = l:count + 1
+	  endwhile
+	  if (match(l:lineBuffer, l:someNamePattern.'(') != -1)
+		  exec "normal k"
+	  else
+		  exec "normal `d" 
+	  endif
+  endif
+
   let l:lineBuffer       = getline( line( "." ) )
   let l:count            = 1
   let l:endDocFound      = 0
